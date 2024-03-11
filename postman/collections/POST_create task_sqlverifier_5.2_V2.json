@@ -100,12 +100,12 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"admin_automation\",\n    \"password\": \"admin_automation\",\n    \"rememberMe\": \"true\"\n}"
+							"raw": "{\n    \"username\": \"{{AdminUsername}}\",\n    \"password\": \"{{AdminPassword}}\",\n    \"rememberMe\": \"true\"\n}"
 						},
 						"url": {
-							"raw": "{{baseURL}}authenticate",
+							"raw": "{{BASE_URL_SQLVERIFIER}}authenticate",
 							"host": [
-								"{{baseURL}}authenticate"
+								"{{BASE_URL_SQLVERIFIER}}authenticate"
 							]
 						}
 					},
@@ -342,6 +342,1339 @@
 		{
 			"name": "Test without test data from CSV",
 			"item": [
+				{
+					"name": "sad_path_create task",
+					"item": [
+						{
+							"name": "tests for field Text",
+							"item": [
+								{
+									"name": "create task 256 сh in the TEXT field",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
+												"exec": [
+													"pm.test(\"Status code is 500\", function () {",
+													"    pm.response.to.have.status(500);",
+													"});",
+													"",
+													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
+													"    pm.response.to.have.status(\"Internal Server Error\");",
+													"});",
+													"",
+													"pm.test(\"Response time is less than 200ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(200);",
+													"});",
+													"",
+													"pm.test(\"Body matches string 'Failure during data access'\", function () {",
+													"    pm.expect(pm.response.text()).to.include(\"Failure during data access\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
+												"exec": [
+													"function generateRandomString(length) {",
+													"    let result = '';",
+													"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';",
+													"    const charactersLength = characters.length;",
+													"    for (let i = 0; i < length; i++) {",
+													"        result += characters.charAt(Math.floor(Math.random() * charactersLength));",
+													"    }",
+													"    return result;",
+													"}",
+													"",
+													"pm.environment.set(\"randomText\", generateRandomString(256));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "88de211a-842c-4789-886f-22f407efc3c2",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json, text/plain, */*"
+											},
+											{
+												"key": "Accept-Language",
+												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{token}}",
+												"disabled": true
+											},
+											{
+												"key": "Connection",
+												"value": "keep-alive"
+											},
+											{
+												"key": "Referer",
+												"value": "http://localhost:9000/?page=1&sort=id,asc"
+											},
+											{
+												"key": "Sec-Fetch-Dest",
+												"value": "empty"
+											},
+											{
+												"key": "Sec-Fetch-Mode",
+												"value": "cors"
+											},
+											{
+												"key": "Sec-Fetch-Site",
+												"value": "same-origin"
+											},
+											{
+												"key": "User-Agent",
+												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+											},
+											{
+												"key": "sec-ch-ua",
+												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
+											},
+											{
+												"key": "sec-ch-ua-mobile",
+												"value": "?0"
+											},
+											{
+												"key": "sec-ch-ua-platform",
+												"value": "\"macOS\""
+											},
+											{
+												"key": "Origin",
+												"value": "http://localhost:9000"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"text\": \"{{text}}\",\n    \"answer\": \"{{answer}}\",\n    \"title\": \"{{randomNumber}}\"\n}\n"
+										},
+										"url": {
+											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
+											"host": [
+												"{{BASE_URL_SQLVERIFIER}}tasks"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "create task empty the TEXT field",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
+												"exec": [
+													"pm.test(\"Status code is 500\", function () {",
+													"    pm.response.to.have.status(500);",
+													"});",
+													"",
+													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
+													"    pm.response.to.have.status(\"Internal Server Error\");",
+													"});",
+													"",
+													"pm.test(\"Response time is less than 200ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(200);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
+												"exec": [
+													"function generateRandomSpaces(length) {",
+													"    let result = '';",
+													"    for (let i = 0; i < length; i++) {",
+													"        result += ' ';",
+													"    }",
+													"    return result;",
+													"}",
+													"",
+													"pm.environment.set(\"randomSpacesText\", generateRandomSpaces(3));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "30310d98-8f71-445a-8359-9903783b0e0f",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json, text/plain, */*"
+											},
+											{
+												"key": "Accept-Language",
+												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{token}}",
+												"disabled": true
+											},
+											{
+												"key": "Connection",
+												"value": "keep-alive"
+											},
+											{
+												"key": "Referer",
+												"value": "http://localhost:9000/?page=1&sort=id,asc"
+											},
+											{
+												"key": "Sec-Fetch-Dest",
+												"value": "empty"
+											},
+											{
+												"key": "Sec-Fetch-Mode",
+												"value": "cors"
+											},
+											{
+												"key": "Sec-Fetch-Site",
+												"value": "same-origin"
+											},
+											{
+												"key": "User-Agent",
+												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+											},
+											{
+												"key": "sec-ch-ua",
+												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
+											},
+											{
+												"key": "sec-ch-ua-mobile",
+												"value": "?0"
+											},
+											{
+												"key": "sec-ch-ua-platform",
+												"value": "\"macOS\""
+											},
+											{
+												"key": "Origin",
+												"value": "http://localhost:9000"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"text\": \"\",\n    \"answer\": \"{{answer}}\",\n    \"title\": \"{{title}}\"\n}\n"
+										},
+										"url": {
+											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
+											"host": [
+												"{{BASE_URL_SQLVERIFIER}}tasks"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "create task spaces the TEXT field",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
+												"exec": [
+													"pm.test(\"Status code is 500\", function () {",
+													"    pm.response.to.have.status(500);",
+													"});",
+													"",
+													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
+													"    pm.response.to.have.status(\"Internal Server Error\");",
+													"});",
+													"",
+													"pm.test(\"Response time is less than 200ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(200);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
+												"exec": [
+													"function generateRandomSpaces(length) {",
+													"    let result = '';",
+													"    for (let i = 0; i < length; i++) {",
+													"        result += ' ';",
+													"    }",
+													"    return result;",
+													"}",
+													"",
+													"pm.environment.set(\"randomSpacesText\", generateRandomSpaces(3));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "36ee7be8-3bb6-45e6-9989-50be2e773179",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json, text/plain, */*"
+											},
+											{
+												"key": "Accept-Language",
+												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{token}}",
+												"disabled": true
+											},
+											{
+												"key": "Connection",
+												"value": "keep-alive"
+											},
+											{
+												"key": "Referer",
+												"value": "http://localhost:9000/?page=1&sort=id,asc"
+											},
+											{
+												"key": "Sec-Fetch-Dest",
+												"value": "empty"
+											},
+											{
+												"key": "Sec-Fetch-Mode",
+												"value": "cors"
+											},
+											{
+												"key": "Sec-Fetch-Site",
+												"value": "same-origin"
+											},
+											{
+												"key": "User-Agent",
+												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+											},
+											{
+												"key": "sec-ch-ua",
+												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
+											},
+											{
+												"key": "sec-ch-ua-mobile",
+												"value": "?0"
+											},
+											{
+												"key": "sec-ch-ua-platform",
+												"value": "\"macOS\""
+											},
+											{
+												"key": "Origin",
+												"value": "http://localhost:9000"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"text\": \"{{randomSpacesText}}\",\n    \"answer\": \"{{answer}}\",\n    \"title\": \"{{title}}\"\n}\n"
+										},
+										"url": {
+											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
+											"host": [
+												"{{BASE_URL_SQLVERIFIER}}tasks"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"id": "c41e7f95-e5dd-4358-9a48-bf64841d20d2"
+						},
+						{
+							"name": "tests for field Answer",
+							"item": [
+								{
+									"name": "create task 256 сh in the ANSWER field",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
+												"exec": [
+													"pm.test(\"Status code is 500\", function () {",
+													"    pm.response.to.have.status(500);",
+													"});",
+													"",
+													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
+													"    pm.response.to.have.status(\"Internal Server Error\");",
+													"});",
+													"",
+													"pm.test(\"Response time is less than 200ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(200);",
+													"});",
+													"",
+													"pm.test(\"Body matches string 'Failure during data access'\", function () {",
+													"    pm.expect(pm.response.text()).to.include(\"Failure during data access\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
+												"exec": [
+													"function generateRandomString(length) {",
+													"    let result = '';",
+													"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';",
+													"    const charactersLength = characters.length;",
+													"    for (let i = 0; i < length; i++) {",
+													"        result += characters.charAt(Math.floor(Math.random() * charactersLength));",
+													"    }",
+													"    return result;",
+													"}",
+													"",
+													"pm.environment.set(\"randomText\", generateRandomString(256));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "0098a320-94c4-492e-9102-c90e4d08cba8",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json, text/plain, */*"
+											},
+											{
+												"key": "Accept-Language",
+												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{token}}",
+												"disabled": true
+											},
+											{
+												"key": "Connection",
+												"value": "keep-alive"
+											},
+											{
+												"key": "Referer",
+												"value": "http://localhost:9000/?page=1&sort=id,asc"
+											},
+											{
+												"key": "Sec-Fetch-Dest",
+												"value": "empty"
+											},
+											{
+												"key": "Sec-Fetch-Mode",
+												"value": "cors"
+											},
+											{
+												"key": "Sec-Fetch-Site",
+												"value": "same-origin"
+											},
+											{
+												"key": "User-Agent",
+												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+											},
+											{
+												"key": "sec-ch-ua",
+												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
+											},
+											{
+												"key": "sec-ch-ua-mobile",
+												"value": "?0"
+											},
+											{
+												"key": "sec-ch-ua-platform",
+												"value": "\"macOS\""
+											},
+											{
+												"key": "Origin",
+												"value": "http://localhost:9000"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"text\": \"{{text}}\",\n    \"answer\": \"{{randomText}}\",\n    \"title\": \"{{title}}\"\n}\n"
+										},
+										"url": {
+											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
+											"host": [
+												"{{BASE_URL_SQLVERIFIER}}tasks"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "create task empty the ANSWER field",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
+												"exec": [
+													"pm.test(\"Status code is 500\", function () {",
+													"    pm.response.to.have.status(500);",
+													"});",
+													"",
+													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
+													"    pm.response.to.have.status(\"Internal Server Error\");",
+													"});",
+													"",
+													"pm.test(\"Response time is less than 200ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(200);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "316d969c-fc48-4c36-8c8b-9f3c11ea680f",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json, text/plain, */*"
+											},
+											{
+												"key": "Accept-Language",
+												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{token}}",
+												"disabled": true
+											},
+											{
+												"key": "Connection",
+												"value": "keep-alive"
+											},
+											{
+												"key": "Referer",
+												"value": "http://localhost:9000/?page=1&sort=id,asc"
+											},
+											{
+												"key": "Sec-Fetch-Dest",
+												"value": "empty"
+											},
+											{
+												"key": "Sec-Fetch-Mode",
+												"value": "cors"
+											},
+											{
+												"key": "Sec-Fetch-Site",
+												"value": "same-origin"
+											},
+											{
+												"key": "User-Agent",
+												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+											},
+											{
+												"key": "sec-ch-ua",
+												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
+											},
+											{
+												"key": "sec-ch-ua-mobile",
+												"value": "?0"
+											},
+											{
+												"key": "sec-ch-ua-platform",
+												"value": "\"macOS\""
+											},
+											{
+												"key": "Origin",
+												"value": "http://localhost:9000"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"text\": \"{{text}}\",\n    \"answer\": \"\",\n    \"title\": \"{{title}}\"\n}\n"
+										},
+										"url": {
+											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
+											"host": [
+												"{{BASE_URL_SQLVERIFIER}}tasks"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "create task spaces the ANSWER field",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
+												"exec": [
+													"pm.test(\"Status code is 500\", function () {",
+													"    pm.response.to.have.status(500);",
+													"});",
+													"",
+													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
+													"    pm.response.to.have.status(\"Internal Server Error\");",
+													"});",
+													"",
+													"pm.test(\"Response time is less than 200ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(200);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
+												"exec": [
+													"function generateRandomSpaces(length) {",
+													"    let result = '';",
+													"    for (let i = 0; i < length; i++) {",
+													"        result += ' ';",
+													"    }",
+													"    return result;",
+													"}",
+													"",
+													"pm.environment.set(\"randomSpacesText\", generateRandomSpaces(3));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "1f6c05c7-4c15-4f09-9e67-ab13e51a990b",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json, text/plain, */*"
+											},
+											{
+												"key": "Accept-Language",
+												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{token}}",
+												"disabled": true
+											},
+											{
+												"key": "Connection",
+												"value": "keep-alive"
+											},
+											{
+												"key": "Referer",
+												"value": "http://localhost:9000/?page=1&sort=id,asc"
+											},
+											{
+												"key": "Sec-Fetch-Dest",
+												"value": "empty"
+											},
+											{
+												"key": "Sec-Fetch-Mode",
+												"value": "cors"
+											},
+											{
+												"key": "Sec-Fetch-Site",
+												"value": "same-origin"
+											},
+											{
+												"key": "User-Agent",
+												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+											},
+											{
+												"key": "sec-ch-ua",
+												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
+											},
+											{
+												"key": "sec-ch-ua-mobile",
+												"value": "?0"
+											},
+											{
+												"key": "sec-ch-ua-platform",
+												"value": "\"macOS\""
+											},
+											{
+												"key": "Origin",
+												"value": "http://localhost:9000"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"text\": \"{{text}}\",\n    \"answer\": \"{{randomSpacesText}}\",\n    \"title\": \"{{title}}\"\n}\n"
+										},
+										"url": {
+											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
+											"host": [
+												"{{BASE_URL_SQLVERIFIER}}tasks"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"id": "4cd33502-ce9e-47a0-ad9f-d7e2571ee5a7"
+						},
+						{
+							"name": "tests for field Title",
+							"item": [
+								{
+									"name": "create task 256 сh in the TITLE field",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
+												"exec": [
+													"pm.test(\"Status code is 500\", function () {",
+													"    pm.response.to.have.status(500);",
+													"});",
+													"",
+													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
+													"    pm.response.to.have.status(\"Internal Server Error\");",
+													"});",
+													"",
+													"pm.test(\"Response time is less than 200ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(200);",
+													"});",
+													"",
+													"pm.test(\"Body matches string 'Failure during data access'\", function () {",
+													"    pm.expect(pm.response.text()).to.include(\"Failure during data access\");",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
+												"exec": [
+													"function generateRandomString(length) {",
+													"    let result = '';",
+													"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';",
+													"    const charactersLength = characters.length;",
+													"    for (let i = 0; i < length; i++) {",
+													"        result += characters.charAt(Math.floor(Math.random() * charactersLength));",
+													"    }",
+													"    return result;",
+													"}",
+													"",
+													"pm.environment.set(\"randomText\", generateRandomString(256));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "a594a8d9-c9cf-4907-be64-a0db1c913aef",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json, text/plain, */*"
+											},
+											{
+												"key": "Accept-Language",
+												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{token}}",
+												"disabled": true
+											},
+											{
+												"key": "Connection",
+												"value": "keep-alive"
+											},
+											{
+												"key": "Referer",
+												"value": "http://localhost:9000/?page=1&sort=id,asc"
+											},
+											{
+												"key": "Sec-Fetch-Dest",
+												"value": "empty"
+											},
+											{
+												"key": "Sec-Fetch-Mode",
+												"value": "cors"
+											},
+											{
+												"key": "Sec-Fetch-Site",
+												"value": "same-origin"
+											},
+											{
+												"key": "User-Agent",
+												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+											},
+											{
+												"key": "sec-ch-ua",
+												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
+											},
+											{
+												"key": "sec-ch-ua-mobile",
+												"value": "?0"
+											},
+											{
+												"key": "sec-ch-ua-platform",
+												"value": "\"macOS\""
+											},
+											{
+												"key": "Origin",
+												"value": "http://localhost:9000"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"text\": \"{{text}}\",\n    \"answer\": \"{{randomText}}\",\n    \"title\": \"{{randomNumber}}\"\n}\n"
+										},
+										"url": {
+											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
+											"host": [
+												"{{BASE_URL_SQLVERIFIER}}tasks"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "create task empty the TITLE field",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
+												"exec": [
+													"pm.test(\"Status code is 500\", function () {",
+													"    pm.response.to.have.status(500);",
+													"});",
+													"",
+													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
+													"    pm.response.to.have.status(\"Internal Server Error\");",
+													"});",
+													"",
+													"pm.test(\"Response time is less than 200ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(200);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "59eece21-1297-42bf-b21d-24a159898107",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json, text/plain, */*"
+											},
+											{
+												"key": "Accept-Language",
+												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{token}}",
+												"disabled": true
+											},
+											{
+												"key": "Connection",
+												"value": "keep-alive"
+											},
+											{
+												"key": "Referer",
+												"value": "http://localhost:9000/?page=1&sort=id,asc"
+											},
+											{
+												"key": "Sec-Fetch-Dest",
+												"value": "empty"
+											},
+											{
+												"key": "Sec-Fetch-Mode",
+												"value": "cors"
+											},
+											{
+												"key": "Sec-Fetch-Site",
+												"value": "same-origin"
+											},
+											{
+												"key": "User-Agent",
+												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+											},
+											{
+												"key": "sec-ch-ua",
+												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
+											},
+											{
+												"key": "sec-ch-ua-mobile",
+												"value": "?0"
+											},
+											{
+												"key": "sec-ch-ua-platform",
+												"value": "\"macOS\""
+											},
+											{
+												"key": "Origin",
+												"value": "http://localhost:9000"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"text\": \"{{text}}\",\n    \"answer\": \"{{answer}}\",\n    \"title\": \"\"\n}\n"
+										},
+										"url": {
+											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
+											"host": [
+												"{{BASE_URL_SQLVERIFIER}}tasks"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "create task spaces the TITLE field",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
+												"exec": [
+													"pm.test(\"Status code is 500\", function () {",
+													"    pm.response.to.have.status(500);",
+													"});",
+													"",
+													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
+													"    pm.response.to.have.status(\"Internal Server Error\");",
+													"});",
+													"",
+													"pm.test(\"Response time is less than 200ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(200);",
+													"});",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
+												"exec": [
+													"function generateRandomSpaces(length) {",
+													"    let result = '';",
+													"    for (let i = 0; i < length; i++) {",
+													"        result += ' ';",
+													"    }",
+													"    return result;",
+													"}",
+													"",
+													"pm.environment.set(\"randomSpacesText\", generateRandomSpaces(3));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"id": "94829e67-4dfb-4e0e-83ae-acf831df6abd",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json, text/plain, */*"
+											},
+											{
+												"key": "Accept-Language",
+												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{token}}",
+												"disabled": true
+											},
+											{
+												"key": "Connection",
+												"value": "keep-alive"
+											},
+											{
+												"key": "Referer",
+												"value": "http://localhost:9000/?page=1&sort=id,asc"
+											},
+											{
+												"key": "Sec-Fetch-Dest",
+												"value": "empty"
+											},
+											{
+												"key": "Sec-Fetch-Mode",
+												"value": "cors"
+											},
+											{
+												"key": "Sec-Fetch-Site",
+												"value": "same-origin"
+											},
+											{
+												"key": "User-Agent",
+												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+											},
+											{
+												"key": "sec-ch-ua",
+												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
+											},
+											{
+												"key": "sec-ch-ua-mobile",
+												"value": "?0"
+											},
+											{
+												"key": "sec-ch-ua-platform",
+												"value": "\"macOS\""
+											},
+											{
+												"key": "Origin",
+												"value": "http://localhost:9000"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"text\": \"{{text}}\",\n    \"answer\": \"{{answer}}\",\n    \"title\": \"{{randomSpacesText}}\"\n}\n"
+										},
+										"url": {
+											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
+											"host": [
+												"{{BASE_URL_SQLVERIFIER}}tasks"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"id": "1fdf243b-1b49-405d-b0ca-58074a20e17a"
+						},
+						{
+							"name": "create task invalid token Copy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
+										"exec": [
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});",
+											"",
+											"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
+											"    pm.response.to.have.status(\"Unauthorized\");",
+											"});",
+											"",
+											"pm.test(\"Response time is less than 200ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "c754c884-f433-46f9-8b54-df69269bdedf",
+										"exec": [
+											"function generateRandomSpaces(length) {",
+											"    let result = '';",
+											"    for (let i = 0; i < length; i++) {",
+											"        result += ' ';",
+											"    }",
+											"    return result;",
+											"}",
+											"",
+											"pm.environment.set(\"randomSpacesText\", generateRandomSpaces(3));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"id": "1f1b7de7-ca67-4e2a-8173-09920a99c368",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json, text/plain, */*"
+									},
+									{
+										"key": "Accept-Language",
+										"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"disabled": true
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive"
+									},
+									{
+										"key": "Referer",
+										"value": "http://localhost:9000/?page=1&sort=id,asc"
+									},
+									{
+										"key": "Sec-Fetch-Dest",
+										"value": "empty"
+									},
+									{
+										"key": "Sec-Fetch-Mode",
+										"value": "cors"
+									},
+									{
+										"key": "Sec-Fetch-Site",
+										"value": "same-origin"
+									},
+									{
+										"key": "User-Agent",
+										"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+									},
+									{
+										"key": "sec-ch-ua",
+										"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
+									},
+									{
+										"key": "sec-ch-ua-mobile",
+										"value": "?0"
+									},
+									{
+										"key": "sec-ch-ua-platform",
+										"value": "\"macOS\""
+									},
+									{
+										"key": "Origin",
+										"value": "http://localhost:9000"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"text\": \"{{text}}\",\n    \"answer\": \"{{answer}}\",\n    \"title\": \"{{title}}\"\n}\n"
+								},
+								"url": {
+									"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
+									"host": [
+										"{{BASE_URL_SQLVERIFIER}}tasks"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"id": "fe004f99-7d08-41e6-a7b6-a5cd142bf69b"
+				},
 				{
 					"name": "happy_path_create task",
 					"item": [
@@ -2701,1337 +4034,106 @@
 					"id": "eab92cb7-5eb4-40f1-bb55-9c30797b0687"
 				},
 				{
-					"name": "sad_path_create task",
-					"item": [
+					"name": "authenticate user",
+					"event": [
 						{
-							"name": "tests for field Text",
-							"item": [
-								{
-									"name": "create task 256 сh in the TEXT field",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
-												"exec": [
-													"pm.test(\"Status code is 500\", function () {",
-													"    pm.response.to.have.status(500);",
-													"});",
-													"",
-													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
-													"    pm.response.to.have.status(\"Internal Server Error\");",
-													"});",
-													"",
-													"pm.test(\"Response time is less than 200ms\", function () {",
-													"    pm.expect(pm.response.responseTime).to.be.below(200);",
-													"});",
-													"",
-													"pm.test(\"Body matches string 'Failure during data access'\", function () {",
-													"    pm.expect(pm.response.text()).to.include(\"Failure during data access\");",
-													"});"
-												],
-												"type": "text/javascript"
-											}
-										},
-										{
-											"listen": "prerequest",
-											"script": {
-												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
-												"exec": [
-													"function generateRandomString(length) {",
-													"    let result = '';",
-													"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';",
-													"    const charactersLength = characters.length;",
-													"    for (let i = 0; i < length; i++) {",
-													"        result += characters.charAt(Math.floor(Math.random() * charactersLength));",
-													"    }",
-													"    return result;",
-													"}",
-													"",
-													"pm.environment.set(\"randomText\", generateRandomString(256));"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"id": "88de211a-842c-4789-886f-22f407efc3c2",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"auth": {
-											"type": "bearer",
-											"bearer": [
-												{
-													"key": "token",
-													"value": "{{token}}",
-													"type": "string"
-												}
-											]
-										},
-										"method": "POST",
-										"header": [
-											{
-												"key": "Accept",
-												"value": "application/json, text/plain, */*"
-											},
-											{
-												"key": "Accept-Language",
-												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
-											},
-											{
-												"key": "Authorization",
-												"value": "{{token}}",
-												"disabled": true
-											},
-											{
-												"key": "Connection",
-												"value": "keep-alive"
-											},
-											{
-												"key": "Referer",
-												"value": "http://localhost:9000/?page=1&sort=id,asc"
-											},
-											{
-												"key": "Sec-Fetch-Dest",
-												"value": "empty"
-											},
-											{
-												"key": "Sec-Fetch-Mode",
-												"value": "cors"
-											},
-											{
-												"key": "Sec-Fetch-Site",
-												"value": "same-origin"
-											},
-											{
-												"key": "User-Agent",
-												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
-											},
-											{
-												"key": "sec-ch-ua",
-												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
-											},
-											{
-												"key": "sec-ch-ua-mobile",
-												"value": "?0"
-											},
-											{
-												"key": "sec-ch-ua-platform",
-												"value": "\"macOS\""
-											},
-											{
-												"key": "Origin",
-												"value": "http://localhost:9000"
-											},
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"text\": \"{{text}}\",\n    \"answer\": \"{{answer}}\",\n    \"title\": \"{{randomNumber}}\"\n}\n"
-										},
-										"url": {
-											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
-											"host": [
-												"{{BASE_URL_SQLVERIFIER}}tasks"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "create task empty the TEXT field",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
-												"exec": [
-													"pm.test(\"Status code is 500\", function () {",
-													"    pm.response.to.have.status(500);",
-													"});",
-													"",
-													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
-													"    pm.response.to.have.status(\"Internal Server Error\");",
-													"});",
-													"",
-													"pm.test(\"Response time is less than 200ms\", function () {",
-													"    pm.expect(pm.response.responseTime).to.be.below(200);",
-													"});",
-													""
-												],
-												"type": "text/javascript"
-											}
-										},
-										{
-											"listen": "prerequest",
-											"script": {
-												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
-												"exec": [
-													"function generateRandomSpaces(length) {",
-													"    let result = '';",
-													"    for (let i = 0; i < length; i++) {",
-													"        result += ' ';",
-													"    }",
-													"    return result;",
-													"}",
-													"",
-													"pm.environment.set(\"randomSpacesText\", generateRandomSpaces(3));"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"id": "30310d98-8f71-445a-8359-9903783b0e0f",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"auth": {
-											"type": "bearer",
-											"bearer": [
-												{
-													"key": "token",
-													"value": "{{token}}",
-													"type": "string"
-												}
-											]
-										},
-										"method": "POST",
-										"header": [
-											{
-												"key": "Accept",
-												"value": "application/json, text/plain, */*"
-											},
-											{
-												"key": "Accept-Language",
-												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
-											},
-											{
-												"key": "Authorization",
-												"value": "{{token}}",
-												"disabled": true
-											},
-											{
-												"key": "Connection",
-												"value": "keep-alive"
-											},
-											{
-												"key": "Referer",
-												"value": "http://localhost:9000/?page=1&sort=id,asc"
-											},
-											{
-												"key": "Sec-Fetch-Dest",
-												"value": "empty"
-											},
-											{
-												"key": "Sec-Fetch-Mode",
-												"value": "cors"
-											},
-											{
-												"key": "Sec-Fetch-Site",
-												"value": "same-origin"
-											},
-											{
-												"key": "User-Agent",
-												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
-											},
-											{
-												"key": "sec-ch-ua",
-												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
-											},
-											{
-												"key": "sec-ch-ua-mobile",
-												"value": "?0"
-											},
-											{
-												"key": "sec-ch-ua-platform",
-												"value": "\"macOS\""
-											},
-											{
-												"key": "Origin",
-												"value": "http://localhost:9000"
-											},
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"text\": \"\",\n    \"answer\": \"{{answer}}\",\n    \"title\": \"{{title}}\"\n}\n"
-										},
-										"url": {
-											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
-											"host": [
-												"{{BASE_URL_SQLVERIFIER}}tasks"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "create task spaces the TEXT field",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
-												"exec": [
-													"pm.test(\"Status code is 500\", function () {",
-													"    pm.response.to.have.status(500);",
-													"});",
-													"",
-													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
-													"    pm.response.to.have.status(\"Internal Server Error\");",
-													"});",
-													"",
-													"pm.test(\"Response time is less than 200ms\", function () {",
-													"    pm.expect(pm.response.responseTime).to.be.below(200);",
-													"});",
-													""
-												],
-												"type": "text/javascript"
-											}
-										},
-										{
-											"listen": "prerequest",
-											"script": {
-												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
-												"exec": [
-													"function generateRandomSpaces(length) {",
-													"    let result = '';",
-													"    for (let i = 0; i < length; i++) {",
-													"        result += ' ';",
-													"    }",
-													"    return result;",
-													"}",
-													"",
-													"pm.environment.set(\"randomSpacesText\", generateRandomSpaces(3));"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"id": "36ee7be8-3bb6-45e6-9989-50be2e773179",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"auth": {
-											"type": "bearer",
-											"bearer": [
-												{
-													"key": "token",
-													"value": "{{token}}",
-													"type": "string"
-												}
-											]
-										},
-										"method": "POST",
-										"header": [
-											{
-												"key": "Accept",
-												"value": "application/json, text/plain, */*"
-											},
-											{
-												"key": "Accept-Language",
-												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
-											},
-											{
-												"key": "Authorization",
-												"value": "{{token}}",
-												"disabled": true
-											},
-											{
-												"key": "Connection",
-												"value": "keep-alive"
-											},
-											{
-												"key": "Referer",
-												"value": "http://localhost:9000/?page=1&sort=id,asc"
-											},
-											{
-												"key": "Sec-Fetch-Dest",
-												"value": "empty"
-											},
-											{
-												"key": "Sec-Fetch-Mode",
-												"value": "cors"
-											},
-											{
-												"key": "Sec-Fetch-Site",
-												"value": "same-origin"
-											},
-											{
-												"key": "User-Agent",
-												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
-											},
-											{
-												"key": "sec-ch-ua",
-												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
-											},
-											{
-												"key": "sec-ch-ua-mobile",
-												"value": "?0"
-											},
-											{
-												"key": "sec-ch-ua-platform",
-												"value": "\"macOS\""
-											},
-											{
-												"key": "Origin",
-												"value": "http://localhost:9000"
-											},
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"text\": \"{{randomSpacesText}}\",\n    \"answer\": \"{{answer}}\",\n    \"title\": \"{{title}}\"\n}\n"
-										},
-										"url": {
-											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
-											"host": [
-												"{{BASE_URL_SQLVERIFIER}}tasks"
-											]
-										}
-									},
-									"response": []
-								}
-							],
-							"id": "c41e7f95-e5dd-4358-9a48-bf64841d20d2"
-						},
-						{
-							"name": "tests for field Answer",
-							"item": [
-								{
-									"name": "create task 256 сh in the ANSWER field",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
-												"exec": [
-													"pm.test(\"Status code is 500\", function () {",
-													"    pm.response.to.have.status(500);",
-													"});",
-													"",
-													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
-													"    pm.response.to.have.status(\"Internal Server Error\");",
-													"});",
-													"",
-													"pm.test(\"Response time is less than 200ms\", function () {",
-													"    pm.expect(pm.response.responseTime).to.be.below(200);",
-													"});",
-													"",
-													"pm.test(\"Body matches string 'Failure during data access'\", function () {",
-													"    pm.expect(pm.response.text()).to.include(\"Failure during data access\");",
-													"});"
-												],
-												"type": "text/javascript"
-											}
-										},
-										{
-											"listen": "prerequest",
-											"script": {
-												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
-												"exec": [
-													"function generateRandomString(length) {",
-													"    let result = '';",
-													"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';",
-													"    const charactersLength = characters.length;",
-													"    for (let i = 0; i < length; i++) {",
-													"        result += characters.charAt(Math.floor(Math.random() * charactersLength));",
-													"    }",
-													"    return result;",
-													"}",
-													"",
-													"pm.environment.set(\"randomText\", generateRandomString(256));"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"id": "0098a320-94c4-492e-9102-c90e4d08cba8",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"auth": {
-											"type": "bearer",
-											"bearer": [
-												{
-													"key": "token",
-													"value": "{{token}}",
-													"type": "string"
-												}
-											]
-										},
-										"method": "POST",
-										"header": [
-											{
-												"key": "Accept",
-												"value": "application/json, text/plain, */*"
-											},
-											{
-												"key": "Accept-Language",
-												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
-											},
-											{
-												"key": "Authorization",
-												"value": "{{token}}",
-												"disabled": true
-											},
-											{
-												"key": "Connection",
-												"value": "keep-alive"
-											},
-											{
-												"key": "Referer",
-												"value": "http://localhost:9000/?page=1&sort=id,asc"
-											},
-											{
-												"key": "Sec-Fetch-Dest",
-												"value": "empty"
-											},
-											{
-												"key": "Sec-Fetch-Mode",
-												"value": "cors"
-											},
-											{
-												"key": "Sec-Fetch-Site",
-												"value": "same-origin"
-											},
-											{
-												"key": "User-Agent",
-												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
-											},
-											{
-												"key": "sec-ch-ua",
-												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
-											},
-											{
-												"key": "sec-ch-ua-mobile",
-												"value": "?0"
-											},
-											{
-												"key": "sec-ch-ua-platform",
-												"value": "\"macOS\""
-											},
-											{
-												"key": "Origin",
-												"value": "http://localhost:9000"
-											},
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"text\": \"{{text}}\",\n    \"answer\": \"{{randomText}}\",\n    \"title\": \"{{title}}\"\n}\n"
-										},
-										"url": {
-											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
-											"host": [
-												"{{BASE_URL_SQLVERIFIER}}tasks"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "create task empty the ANSWER field",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
-												"exec": [
-													"pm.test(\"Status code is 500\", function () {",
-													"    pm.response.to.have.status(500);",
-													"});",
-													"",
-													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
-													"    pm.response.to.have.status(\"Internal Server Error\");",
-													"});",
-													"",
-													"pm.test(\"Response time is less than 200ms\", function () {",
-													"    pm.expect(pm.response.responseTime).to.be.below(200);",
-													"});",
-													""
-												],
-												"type": "text/javascript"
-											}
-										},
-										{
-											"listen": "prerequest",
-											"script": {
-												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
-												"exec": [
-													""
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"id": "316d969c-fc48-4c36-8c8b-9f3c11ea680f",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"auth": {
-											"type": "bearer",
-											"bearer": [
-												{
-													"key": "token",
-													"value": "{{token}}",
-													"type": "string"
-												}
-											]
-										},
-										"method": "POST",
-										"header": [
-											{
-												"key": "Accept",
-												"value": "application/json, text/plain, */*"
-											},
-											{
-												"key": "Accept-Language",
-												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
-											},
-											{
-												"key": "Authorization",
-												"value": "{{token}}",
-												"disabled": true
-											},
-											{
-												"key": "Connection",
-												"value": "keep-alive"
-											},
-											{
-												"key": "Referer",
-												"value": "http://localhost:9000/?page=1&sort=id,asc"
-											},
-											{
-												"key": "Sec-Fetch-Dest",
-												"value": "empty"
-											},
-											{
-												"key": "Sec-Fetch-Mode",
-												"value": "cors"
-											},
-											{
-												"key": "Sec-Fetch-Site",
-												"value": "same-origin"
-											},
-											{
-												"key": "User-Agent",
-												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
-											},
-											{
-												"key": "sec-ch-ua",
-												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
-											},
-											{
-												"key": "sec-ch-ua-mobile",
-												"value": "?0"
-											},
-											{
-												"key": "sec-ch-ua-platform",
-												"value": "\"macOS\""
-											},
-											{
-												"key": "Origin",
-												"value": "http://localhost:9000"
-											},
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"text\": \"{{text}}\",\n    \"answer\": \"\",\n    \"title\": \"{{title}}\"\n}\n"
-										},
-										"url": {
-											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
-											"host": [
-												"{{BASE_URL_SQLVERIFIER}}tasks"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "create task spaces the ANSWER field",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
-												"exec": [
-													"pm.test(\"Status code is 500\", function () {",
-													"    pm.response.to.have.status(500);",
-													"});",
-													"",
-													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
-													"    pm.response.to.have.status(\"Internal Server Error\");",
-													"});",
-													"",
-													"pm.test(\"Response time is less than 200ms\", function () {",
-													"    pm.expect(pm.response.responseTime).to.be.below(200);",
-													"});",
-													""
-												],
-												"type": "text/javascript"
-											}
-										},
-										{
-											"listen": "prerequest",
-											"script": {
-												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
-												"exec": [
-													"function generateRandomSpaces(length) {",
-													"    let result = '';",
-													"    for (let i = 0; i < length; i++) {",
-													"        result += ' ';",
-													"    }",
-													"    return result;",
-													"}",
-													"",
-													"pm.environment.set(\"randomSpacesText\", generateRandomSpaces(3));"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"id": "1f6c05c7-4c15-4f09-9e67-ab13e51a990b",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"auth": {
-											"type": "bearer",
-											"bearer": [
-												{
-													"key": "token",
-													"value": "{{token}}",
-													"type": "string"
-												}
-											]
-										},
-										"method": "POST",
-										"header": [
-											{
-												"key": "Accept",
-												"value": "application/json, text/plain, */*"
-											},
-											{
-												"key": "Accept-Language",
-												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
-											},
-											{
-												"key": "Authorization",
-												"value": "{{token}}",
-												"disabled": true
-											},
-											{
-												"key": "Connection",
-												"value": "keep-alive"
-											},
-											{
-												"key": "Referer",
-												"value": "http://localhost:9000/?page=1&sort=id,asc"
-											},
-											{
-												"key": "Sec-Fetch-Dest",
-												"value": "empty"
-											},
-											{
-												"key": "Sec-Fetch-Mode",
-												"value": "cors"
-											},
-											{
-												"key": "Sec-Fetch-Site",
-												"value": "same-origin"
-											},
-											{
-												"key": "User-Agent",
-												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
-											},
-											{
-												"key": "sec-ch-ua",
-												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
-											},
-											{
-												"key": "sec-ch-ua-mobile",
-												"value": "?0"
-											},
-											{
-												"key": "sec-ch-ua-platform",
-												"value": "\"macOS\""
-											},
-											{
-												"key": "Origin",
-												"value": "http://localhost:9000"
-											},
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"text\": \"{{text}}\",\n    \"answer\": \"{{randomSpacesText}}\",\n    \"title\": \"{{title}}\"\n}\n"
-										},
-										"url": {
-											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
-											"host": [
-												"{{BASE_URL_SQLVERIFIER}}tasks"
-											]
-										}
-									},
-									"response": []
-								}
-							],
-							"id": "4cd33502-ce9e-47a0-ad9f-d7e2571ee5a7"
-						},
-						{
-							"name": "tests for field Title",
-							"item": [
-								{
-									"name": "create task 256 сh in the TITLE field",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
-												"exec": [
-													"pm.test(\"Status code is 500\", function () {",
-													"    pm.response.to.have.status(500);",
-													"});",
-													"",
-													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
-													"    pm.response.to.have.status(\"Internal Server Error\");",
-													"});",
-													"",
-													"pm.test(\"Response time is less than 200ms\", function () {",
-													"    pm.expect(pm.response.responseTime).to.be.below(200);",
-													"});",
-													"",
-													"pm.test(\"Body matches string 'Failure during data access'\", function () {",
-													"    pm.expect(pm.response.text()).to.include(\"Failure during data access\");",
-													"});"
-												],
-												"type": "text/javascript"
-											}
-										},
-										{
-											"listen": "prerequest",
-											"script": {
-												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
-												"exec": [
-													"function generateRandomString(length) {",
-													"    let result = '';",
-													"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';",
-													"    const charactersLength = characters.length;",
-													"    for (let i = 0; i < length; i++) {",
-													"        result += characters.charAt(Math.floor(Math.random() * charactersLength));",
-													"    }",
-													"    return result;",
-													"}",
-													"",
-													"pm.environment.set(\"randomText\", generateRandomString(256));"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"id": "a594a8d9-c9cf-4907-be64-a0db1c913aef",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"auth": {
-											"type": "bearer",
-											"bearer": [
-												{
-													"key": "token",
-													"value": "{{token}}",
-													"type": "string"
-												}
-											]
-										},
-										"method": "POST",
-										"header": [
-											{
-												"key": "Accept",
-												"value": "application/json, text/plain, */*"
-											},
-											{
-												"key": "Accept-Language",
-												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
-											},
-											{
-												"key": "Authorization",
-												"value": "{{token}}",
-												"disabled": true
-											},
-											{
-												"key": "Connection",
-												"value": "keep-alive"
-											},
-											{
-												"key": "Referer",
-												"value": "http://localhost:9000/?page=1&sort=id,asc"
-											},
-											{
-												"key": "Sec-Fetch-Dest",
-												"value": "empty"
-											},
-											{
-												"key": "Sec-Fetch-Mode",
-												"value": "cors"
-											},
-											{
-												"key": "Sec-Fetch-Site",
-												"value": "same-origin"
-											},
-											{
-												"key": "User-Agent",
-												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
-											},
-											{
-												"key": "sec-ch-ua",
-												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
-											},
-											{
-												"key": "sec-ch-ua-mobile",
-												"value": "?0"
-											},
-											{
-												"key": "sec-ch-ua-platform",
-												"value": "\"macOS\""
-											},
-											{
-												"key": "Origin",
-												"value": "http://localhost:9000"
-											},
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"text\": \"{{text}}\",\n    \"answer\": \"{{randomText}}\",\n    \"title\": \"{{randomNumber}}\"\n}\n"
-										},
-										"url": {
-											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
-											"host": [
-												"{{BASE_URL_SQLVERIFIER}}tasks"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "create task empty the TITLE field",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
-												"exec": [
-													"pm.test(\"Status code is 500\", function () {",
-													"    pm.response.to.have.status(500);",
-													"});",
-													"",
-													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
-													"    pm.response.to.have.status(\"Internal Server Error\");",
-													"});",
-													"",
-													"pm.test(\"Response time is less than 200ms\", function () {",
-													"    pm.expect(pm.response.responseTime).to.be.below(200);",
-													"});",
-													""
-												],
-												"type": "text/javascript"
-											}
-										},
-										{
-											"listen": "prerequest",
-											"script": {
-												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
-												"exec": [
-													""
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"id": "59eece21-1297-42bf-b21d-24a159898107",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"auth": {
-											"type": "bearer",
-											"bearer": [
-												{
-													"key": "token",
-													"value": "{{token}}",
-													"type": "string"
-												}
-											]
-										},
-										"method": "POST",
-										"header": [
-											{
-												"key": "Accept",
-												"value": "application/json, text/plain, */*"
-											},
-											{
-												"key": "Accept-Language",
-												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
-											},
-											{
-												"key": "Authorization",
-												"value": "{{token}}",
-												"disabled": true
-											},
-											{
-												"key": "Connection",
-												"value": "keep-alive"
-											},
-											{
-												"key": "Referer",
-												"value": "http://localhost:9000/?page=1&sort=id,asc"
-											},
-											{
-												"key": "Sec-Fetch-Dest",
-												"value": "empty"
-											},
-											{
-												"key": "Sec-Fetch-Mode",
-												"value": "cors"
-											},
-											{
-												"key": "Sec-Fetch-Site",
-												"value": "same-origin"
-											},
-											{
-												"key": "User-Agent",
-												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
-											},
-											{
-												"key": "sec-ch-ua",
-												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
-											},
-											{
-												"key": "sec-ch-ua-mobile",
-												"value": "?0"
-											},
-											{
-												"key": "sec-ch-ua-platform",
-												"value": "\"macOS\""
-											},
-											{
-												"key": "Origin",
-												"value": "http://localhost:9000"
-											},
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"text\": \"{{text}}\",\n    \"answer\": \"{{answer}}\",\n    \"title\": \"\"\n}\n"
-										},
-										"url": {
-											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
-											"host": [
-												"{{BASE_URL_SQLVERIFIER}}tasks"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "create task spaces the TITLE field",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
-												"exec": [
-													"pm.test(\"Status code is 500\", function () {",
-													"    pm.response.to.have.status(500);",
-													"});",
-													"",
-													"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
-													"    pm.response.to.have.status(\"Internal Server Error\");",
-													"});",
-													"",
-													"pm.test(\"Response time is less than 200ms\", function () {",
-													"    pm.expect(pm.response.responseTime).to.be.below(200);",
-													"});",
-													""
-												],
-												"type": "text/javascript"
-											}
-										},
-										{
-											"listen": "prerequest",
-											"script": {
-												"id": "c754c884-f433-46f9-8b54-df69269bdedf",
-												"exec": [
-													"function generateRandomSpaces(length) {",
-													"    let result = '';",
-													"    for (let i = 0; i < length; i++) {",
-													"        result += ' ';",
-													"    }",
-													"    return result;",
-													"}",
-													"",
-													"pm.environment.set(\"randomSpacesText\", generateRandomSpaces(3));"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"id": "94829e67-4dfb-4e0e-83ae-acf831df6abd",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"auth": {
-											"type": "bearer",
-											"bearer": [
-												{
-													"key": "token",
-													"value": "{{token}}",
-													"type": "string"
-												}
-											]
-										},
-										"method": "POST",
-										"header": [
-											{
-												"key": "Accept",
-												"value": "application/json, text/plain, */*"
-											},
-											{
-												"key": "Accept-Language",
-												"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
-											},
-											{
-												"key": "Authorization",
-												"value": "{{token}}",
-												"disabled": true
-											},
-											{
-												"key": "Connection",
-												"value": "keep-alive"
-											},
-											{
-												"key": "Referer",
-												"value": "http://localhost:9000/?page=1&sort=id,asc"
-											},
-											{
-												"key": "Sec-Fetch-Dest",
-												"value": "empty"
-											},
-											{
-												"key": "Sec-Fetch-Mode",
-												"value": "cors"
-											},
-											{
-												"key": "Sec-Fetch-Site",
-												"value": "same-origin"
-											},
-											{
-												"key": "User-Agent",
-												"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
-											},
-											{
-												"key": "sec-ch-ua",
-												"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
-											},
-											{
-												"key": "sec-ch-ua-mobile",
-												"value": "?0"
-											},
-											{
-												"key": "sec-ch-ua-platform",
-												"value": "\"macOS\""
-											},
-											{
-												"key": "Origin",
-												"value": "http://localhost:9000"
-											},
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"text\": \"{{text}}\",\n    \"answer\": \"{{answer}}\",\n    \"title\": \"{{randomSpacesText}}\"\n}\n"
-										},
-										"url": {
-											"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
-											"host": [
-												"{{BASE_URL_SQLVERIFIER}}tasks"
-											]
-										}
-									},
-									"response": []
-								}
-							],
-							"id": "1fdf243b-1b49-405d-b0ca-58074a20e17a"
-						},
-						{
-							"name": "create task invalid token Copy",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "ea42cefb-23cf-49e3-8200-98d0bbafaa46",
-										"exec": [
-											"pm.test(\"Status code is 401\", function () {",
-											"    pm.response.to.have.status(401);",
-											"});",
-											"",
-											"pm.test(\"Status code name has string 'Internal Server Error'\", function () {",
-											"    pm.response.to.have.status(\"Unauthorized\");",
-											"});",
-											"",
-											"pm.test(\"Response time is less than 200ms\", function () {",
-											"    pm.expect(pm.response.responseTime).to.be.below(200);",
-											"});",
-											""
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"id": "c754c884-f433-46f9-8b54-df69269bdedf",
-										"exec": [
-											"function generateRandomSpaces(length) {",
-											"    let result = '';",
-											"    for (let i = 0; i < length; i++) {",
-											"        result += ' ';",
-											"    }",
-											"    return result;",
-											"}",
-											"",
-											"pm.environment.set(\"randomSpacesText\", generateRandomSpaces(3));"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"id": "1f1b7de7-ca67-4e2a-8173-09920a99c368",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Accept",
-										"value": "application/json, text/plain, */*"
-									},
-									{
-										"key": "Accept-Language",
-										"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
-									},
-									{
-										"key": "Authorization",
-										"value": "{{token}}",
-										"disabled": true
-									},
-									{
-										"key": "Connection",
-										"value": "keep-alive"
-									},
-									{
-										"key": "Referer",
-										"value": "http://localhost:9000/?page=1&sort=id,asc"
-									},
-									{
-										"key": "Sec-Fetch-Dest",
-										"value": "empty"
-									},
-									{
-										"key": "Sec-Fetch-Mode",
-										"value": "cors"
-									},
-									{
-										"key": "Sec-Fetch-Site",
-										"value": "same-origin"
-									},
-									{
-										"key": "User-Agent",
-										"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
-									},
-									{
-										"key": "sec-ch-ua",
-										"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
-									},
-									{
-										"key": "sec-ch-ua-mobile",
-										"value": "?0"
-									},
-									{
-										"key": "sec-ch-ua-platform",
-										"value": "\"macOS\""
-									},
-									{
-										"key": "Origin",
-										"value": "http://localhost:9000"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
+							"listen": "test",
+							"script": {
+								"id": "be75ba2b-e651-44ed-8ca7-ab9f28e4d32f",
+								"exec": [
+									"let jsonBody = pm.response.json()",
+									"console.log(jsonBody.id_token) ",
+									"pm.environment.set(\"token\", jsonBody.id_token);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Body matches string 'id_token'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"id_token\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Status code name has string 'OK'\", function () {",
+									"    pm.response.to.have.status(\"OK\");",
+									"});"
 								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"text\": \"{{text}}\",\n    \"answer\": \"{{answer}}\",\n    \"title\": \"{{title}}\"\n}\n"
-								},
-								"url": {
-									"raw": "{{BASE_URL_SQLVERIFIER}}tasks",
-									"host": [
-										"{{BASE_URL_SQLVERIFIER}}tasks"
-									]
-								}
-							},
-							"response": []
+								"type": "text/javascript"
+							}
 						}
 					],
-					"id": "fe004f99-7d08-41e6-a7b6-a5cd142bf69b"
+					"id": "60840600-7c09-4623-a984-1dd701eacd53",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Origin",
+								"value": "http://localhost:9000"
+							},
+							{
+								"key": "Referer",
+								"value": "http://localhost:9000/login"
+							},
+							{
+								"key": "Sec-Fetch-Dest",
+								"value": "empty"
+							},
+							{
+								"key": "Sec-Fetch-Mode",
+								"value": "cors"
+							},
+							{
+								"key": "Sec-Fetch-Site",
+								"value": "same-origin"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"macOS\""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{AdminUsername}}\",\n    \"password\": \"{{AdminPassword}}\",\n    \"rememberMe\": \"true\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL_SQLVERIFIER}}authenticate",
+							"host": [
+								"{{BASE_URL_SQLVERIFIER}}authenticate"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"id": "7f9565e4-5a4e-4e9a-9939-bb63a4919604"
